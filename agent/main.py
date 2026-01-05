@@ -2,6 +2,8 @@ import os
 from change_extractor import extract_pr_metadata
 from file_changes import get_changed_files, classify_file
 from risk_engine import compute_risk_score
+from llm_reasoner import get_llm_risk_insights
+
 
 
 
@@ -41,6 +43,12 @@ def main():
     print("\nReasons:")
     for r in reasons:
         print(f"- {r}")
+
+    print("\n--- LLM Semantic Risk Insights ---")
+
+    llm_insights = get_llm_risk_insights(pr_info, files, summary)
+    print(llm_insights)
+        
     
 
 
