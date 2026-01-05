@@ -1,6 +1,8 @@
 import os
 from change_extractor import extract_pr_metadata
 from file_changes import get_changed_files, classify_file
+from risk_engine import compute_risk_score
+
 
 
 def main():
@@ -27,6 +29,19 @@ def main():
     print("\n--- Change Summary ---")
     for k, v in summary.items():
         print(f"{k}: {v}")
+
+    total_additions = sum(f["additions"] for f in files)
+
+    score, level, reasons = compute_risk_score(summary, total_additions)
+
+    print("\n--- Risk Assessment ---")
+    print(f"Risk Score: {score}")
+    print(f"Risk Level: {level}")
+
+    print("\nReasons:")
+    for r in reasons:
+        print(f"- {r}")
+    
 
 
 if __name__ == "__main__":
