@@ -1,4 +1,5 @@
 import os
+import sys
 from change_extractor import extract_pr_metadata
 from file_changes import get_changed_files, classify_file
 from risk_engine import compute_risk_score
@@ -70,6 +71,10 @@ def main():
     post_pr_comment(pr_number, repo, comment)
 
     print("\nPR comment posted successfully.")
+
+    if level == "HIGH":
+        print("\n❌ High-risk change detected. Blocking merge.")
+        sys.exit(1)
 
 
 
