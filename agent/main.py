@@ -3,6 +3,8 @@ from change_extractor import extract_pr_metadata
 from file_changes import get_changed_files, classify_file
 from risk_engine import compute_risk_score
 from llm_reasoner import get_llm_risk_insights
+from pr_commenter import post_pr_comment
+
 
 
 
@@ -49,7 +51,26 @@ def main():
     llm_insights = get_llm_risk_insights(pr_info, files, summary)
     print(llm_insights)
         
-    
+    repo = os.getenv("GITHUB_REPOSITORY")
+
+    comment = f"""
+    ⚠️ **Change Risk Assessment**
+
+    **Risk Score:** {score}  
+    **Risk Level:** {level}
+
+    ### Deterministic Risk Signals
+    """
+    for r in reasons:
+        comment += f"- {r}\n"
+
+    comment += "\n### LLM Semantic Risk Insights\n"
+    comment += llm_insights
+
+    post_pr_comment(pr_number, repo, comment)
+
+    print("\nPR comment posted successfully.")
+
 
 
 if __name__ == "__main__":
